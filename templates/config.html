@@ -1,0 +1,193 @@
+$def with(anal_engine, ida_path, pyew_path)
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="static/img/apple-icon.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="static/img/favicon.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <title>COSA NOSTRA</title>
+
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+
+    <!-- Bootstrap core CSS     -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Animation library for notifications   -->
+    <link href="static/css/animate.min.css" rel="stylesheet"/>
+
+    <!--  Paper Dashboard core CSS    -->
+    <link href="static/css/paper-dashboard.css" rel="stylesheet"/>
+
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="static/css/demo.css" rel="stylesheet" />
+
+    <!--  Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
+    <link href="static/css/themify-icons.css" rel="stylesheet">
+
+</head>
+</head>
+
+<div class="wrapper">
+  <div class="sidebar" data-background-color="black" data-active-color="danger">
+      <div class="sidebar-wrapper">
+            <div class="logo">
+                <img src="static/img/logo.png" alt=" Gli farò un'offerta che non potrà rifiutare" class="img-responsive center-block" />             
+
+            </div>
+
+            <ul class="nav">
+<li>
+                    <a href="/">
+                        <i class="ti-target"></i>
+                        <p>Index</p>
+                    </a>
+                </li>
+				<li> 
+				                   <a href="/samples">
+                        <i class="ti-save"></i>
+                        <p>Samples</p>
+                    </a>
+                </li>
+               <li>
+                    <a href="/clusters">
+                        <i class="ti-view-list-alt"></i>
+                        <p>Clusters</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/config">
+                        <i class="ti-settings"></i>
+                        <p>Configuration</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/logout">
+                        <i class="ti-unlock"></i>
+                        <p>Logout</p>
+                    </a>
+                </li>
+            </ul>
+      </div>
+    </div>
+
+    
+
+
+
+     <div class="main-panel">
+    <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+
+               
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+
+<div class="container">
+    <div class="box">
+        <div class="col-md-10 col-md-offset-1">
+         <tr><td>
+<h2>Configuration</h2>
+  <form action="/config" method="POST">
+  <table>
+    <tr>
+      <td>Code analysis engine to use:</td>
+      <td>
+        <select name="anal_engine">
+          <option value="pyew"
+          $if anal_engine == "pyew":
+            selected
+          >Pyew</option>
+          <option value="ida"
+          $if anal_engine == "ida":
+            selected
+          >IDA</option>
+        </select>
+      </td>
+      <td><i>Code analysis engine to use. Either 'IDA' or 'Pyew'.</i></td>
+    </tr>
+    <tr>
+      <td>IDA's directory:</td>
+      <td><input type="text" name="ida_path" value="$ida_path" size="50"/></td>
+      <td><i>Directory where IDA is installed.</i></td>
+    </tr>
+    <tr>
+      <td>Pyew's directory:</td>
+      <td><input type="text" name="pyew_path" value="$pyew_path" size="50"/></td>
+      <td><i>Directory where pyew is installed.</i></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <input type="submit" value="Update"/>
+      </td>
+    </tr>
+  </table>
+  </form>
+</td></tr>
+</table>
+</div>
+</div>
+
+
+ <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+  
+                    </ul>
+                </nav>
+
+        <div class="copyright pull-right">
+                    &copy; <script>document.write(new Date().getFullYear())</script>, Copyright - 2016 Joxean Koret </i> · Gli farò un'offerta che non potrà rifiutare
+                </div>
+            </div>
+        </footer>
+
+    </div>
+</div> 
+ </div>
+</div>
+
+
+</body>
+
+    <!--   Core JS Files   -->
+    <script src="static/js/jquery-1.10.2.js" type="text/javascript"></script>
+  <script src="static/js/bootstrap.min.js" type="text/javascript"></script>
+
+  <!--  Checkbox, Radio & Switch Plugins -->
+  <script src="static/js/bootstrap-checkbox-radio.js"></script>
+
+  <!--  Charts Plugin -->
+  <script src="static/js/chartist.min.js"></script>
+
+    <!--  Notifications Plugin    -->
+    <script src="static/js/bootstrap-notify.js"></script>
+
+    <!--  Google Maps Plugin    -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
+
+    <!-- Paper Dashboard Core javascript and methods for Demo purpose -->
+  <script src="/static/js/paper-dashboard.js"></script>
+
+  <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
+  <script src="static/js/demo.js"></script>
+
+
+</html>

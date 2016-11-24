@@ -1,0 +1,12 @@
+{
+ [
+  {
+  "name": "A",
+  "children": [ {"name": "B"} ]
+  },
+  {
+  "name": "B",
+  "children": [ {"name": "C"} ]
+  }
+ ]
+}
