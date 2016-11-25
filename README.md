@@ -35,6 +35,22 @@ $ cd $COSA_NOSTRA_DIR
 $ /path/to/idaq -B -A -Sida_batch.py example.exe
 ```
 
+### Automating the Analysis of a Malware Dataset
+
+The easiest way to analyse a malware dataset is by simply running a command like the following example:
+
+```
+$ find /your/malware/dataset/path -type f -exec python r2_batch.py {} ';'
+```
+
+It can be done in parallel by using the "GNU Parallel" tool, as in the following example:
+
+```
+$ find /your/malware/dataset/path -type f | parallel -j 8 python pyew_batch.py {}
+```
+
+In the example above, it will launch a total of 8 pyew_batch processes in parallel.
+
 ## Database configuration
 
 Once the malware sample is analysed, if the analysis was successful, the call graph data will be stored in, by default, one SQLite database named "db.sqlite". You can configure the database name, path, database system, etc... by editing the file $COSA_NOSTRA_DIR/, as shown bellow:
