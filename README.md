@@ -53,7 +53,7 @@ In the example above, it will launch a total of 8 pyew_batch processes in parall
 
 ## Database configuration
 
-Once the malware sample is analysed, if the analysis was successful, the call graph data will be stored in, by default, one SQLite database named "db.sqlite". You can configure the database name, path, database system, etc... by editing the file $COSA_NOSTRA_DIR/, as shown bellow:
+After the malware samples are analysed, if the analysis was successful, the call graph data for each sample will be stored in, by default, one SQLite database named "db.sqlite". You can configure the database name, path, database system, etc... by editing the file $COSA_NOSTRA_DIR/, as shown bellow:
 
 ```
 $ cat config.cfg 
