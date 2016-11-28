@@ -144,3 +144,26 @@ Once you're logged in you can select from the left panel one the following optio
  * Clusters: See the list of clusters that Cosa Nostra found for the given datasets.
 
 In the "Clusters" view, one can select different clusters and view a hierarchical graph of the discovered malware family.
+
+### Screenshots
+
+List of clusters as shown in Cosa Nostra:
+
+![List of clusters as shown in Cosa Nostra](
+https://github.com/joxeankoret/cosa-nostra/raw/master/screenshots/clusters-list.png)
+
+A small cluster of Trojan.Backspace-1 (name by ClamAV):
+
+![A small cluster of Trojan.Backspace-1, name by ClamAV](https://github.com/joxeankoret/cosa-nostra/blob/master/screenshots/cluster-trojan-backspace.png)
+
+A small cluster of MiniDukes:
+
+![A small cluster of MiniDukes](https://github.com/joxeankoret/cosa-nostra/blob/master/screenshots/small-cluster-miniduke.png)
+
+A cluster of Kazy/Bifroses:
+
+![A cluster of Kazy/Bifroses](https://github.com/joxeankoret/cosa-nostra/blob/master/screenshots/kazi-bifrose-cluster.png)
+
+A small part of a really big cluster of FannyWorms:
+
+![A small part of a really big cluster of FannyWorms](https://github.com/joxeankoret/cosa-nostra/blob/master/screenshots/big-cluster-fannyworm.png)
