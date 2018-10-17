@@ -46,6 +46,9 @@ class CIDAAnalyser:
     self.primes_table = primes(16384*4)
     self.db = open_db()
     self.db.printing = False
+    
+    self.callgraph = None
+    self.primes = None
 
   def file_exists(self, sha1_hash):
     what = "1"
@@ -95,6 +98,9 @@ class CIDAAnalyser:
     avg_nodes = abs(sum(nodes)/total_functions)
     avg_edges = abs(sum(edges)/total_functions)
     avg_ccs = abs(sum(ccs)/total_functions)
+    
+    self.callgraph = callgraph
+    self.primes = primes
 
     return total_functions, avg_nodes, avg_edges, avg_ccs
 
@@ -114,11 +120,11 @@ class CIDAAnalyser:
 
     total_functions, avg_nodes, avg_edges, avg_ccs = data
     msg = "%d-%d-%d-%d" % (total_functions, avg_nodes, avg_edges, avg_ccs)
-    log("File analysed %s, callgraph signature %s" % (msg, callgraph))
+    log("File analysed %s, callgraph signature %s" % (msg, self.callgraph))
     log("Time to analyze %f" % (time.time() - t))
 
-    callgraph = str(callgraph)
-    primes = ",".join(map(str, primes))
+    callgraph = str(self.callgraph)
+    primes = ",".join(map(str, self.primes))
     desc = None # We don't have pyclamd in IDA...
     self.db.insert("samples", filename=filename, callgraph=callgraph,  \
                    hash=sha1_hash, total_functions=total_functions,    \
