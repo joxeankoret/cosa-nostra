@@ -169,14 +169,13 @@ path.link {
 <div class="container">
  <div class="row">
 <h2>View cluster</h2>
-$if row["description"] is not None:
-  <form action="update_cluster" method="POST">
-    Description: <input type="text" name="description" value="$row['description']" size="100%"/>
-    <input type="hidden" name="id" value="$row['id']"/>
-    <input type="submit" value="Update"/>
-  </form>
-  <input type="image" id="generate" src="/static/svg.png" title="Save as SVG"/>
-  <input type="image" id="generate_png" src="/static/png.png" title="Save view as PNG"/>
+<form action="update_cluster" method="POST">
+  Description: <input type="text" name="description" value="$row['description']" size="100%"/>
+  <input type="hidden" name="id" value="$row['id']"/>
+  <input type="submit" value="Update"/>
+</form>
+<input type="image" id="generate" src="/static/svg.png" title="Save as SVG"/>
+<input type="image" id="generate_png" src="/static/png.png" title="Save view as PNG"/>
 <div id="body" class="help">
 <script type="text/javascript">
 var viewerWidth, viewerHeight;
