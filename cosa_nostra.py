@@ -457,6 +457,7 @@ class view_cluster_dot:
 
     g_text = rows[0]["graph"]
     g = CGraph()
+    g.fromDict(json.loads(g_text))
     dot = g.toDot()
     return dot
 
@@ -481,6 +482,7 @@ class view_cluster_gml:
 
     g_text = rows[0]["graph"]
     g = CGraph()
+    g.fromDict(json.loads(g_text))
     dot = g.toGml()
     return dot
 

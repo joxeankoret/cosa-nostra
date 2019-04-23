@@ -742,16 +742,16 @@ function layout_draggable() {
     saveSvgAsPng(svg, "graph.png");
   };
 
-  function saveAsDot() {
-    window.open("/view_cluster.json?id=$row['id']");
+  function saveAsJson() {
+    window.open("/view_cluster.json?id=$row['id']", target="_blank");
   };
   
   function saveAsGml() {
-    window.open("/view_cluster.gml?id=$row['id']");
+    window.open("/view_cluster.gml?id=$row['id']", target="_blank");
   };
   
   function saveAsDot() {
-    window.open("/view_cluster.dot?id=$row['id']");
+    window.open("/view_cluster.dot?id=$row['id']", target="_blank");
   };
 }
 
