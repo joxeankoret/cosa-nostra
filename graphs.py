@@ -130,6 +130,16 @@ class CGraph(object):
     d2 = eval(self.hash())
     return d == d2
 
+  def renameNode(self, node, new_node):
+    for key in self.d:
+      if key.name == node:
+        key.name = new_node
+
+    for key in self.d:
+      for i, _ in enumerate(self.d[key]):
+        if self.d[key][i].name == node:
+          self.d[key][i].name = new_node
+
   def addNode(self, node):
     self.d[node] = []
   
@@ -704,6 +714,27 @@ def testJson():
   print g.toJson()
 
 #-----------------------------------------------------------------------
+def testRename():
+  a = CNode("a")
+  b = CNode("b")
+  c = CNode("c")
+  d = CNode("d")
+  e = CNode("e")
+  f = CNode("f")
+  g = CNode("g")
+
+  g1 = CGraph()
+  g1.addEdge(a, b)
+  g1.addEdge(a, c)
+  g1.addEdge(b, d)
+  g1.addEdge(b, e)
+  g1.addEdge(c, f)
+  g1.addEdge(c, g)
+  print("G?", g1)
+  g1.renameNode("c", "new_c")
+  print("New G?", g1)
+
+#-----------------------------------------------------------------------
 def testAll():
   #test1()
   #test2()
@@ -719,4 +750,6 @@ def testAll():
 
 if __name__ == "__main__":
   #testAll()
-  testDict()
+  #testDict()
+  testRename()
+

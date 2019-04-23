@@ -458,6 +458,18 @@ class view_cluster_dot:
     g_text = rows[0]["graph"]
     g = CGraph()
     g.fromDict(json.loads(g_text))
+    
+    for node in list(g.nodes()):
+      if node.name.startswith("New node "):
+        g.renameNode(node.name, node.name.replace("New node ", "Cluster "))
+      else:
+        data = get_sample_data(node.name)
+        if data["description"] is not None:
+          tmp = data["description"]
+        else:
+          tmp = data["hash"]
+        g.renameNode(node.name, tmp)
+
     dot = g.toDot()
     return dot
 
@@ -483,6 +495,18 @@ class view_cluster_gml:
     g_text = rows[0]["graph"]
     g = CGraph()
     g.fromDict(json.loads(g_text))
+    
+    for node in list(g.nodes()):
+      if node.name.startswith("New node "):
+        g.renameNode(node.name, node.name.replace("New node ", "Cluster "))
+      else:
+        data = get_sample_data(node.name)
+        if data["description"] is not None:
+          tmp = data["description"]
+        else:
+          tmp = data["hash"]
+        g.renameNode(node.name, tmp)
+
     dot = g.toGml()
     return dot
 
