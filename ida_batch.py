@@ -123,13 +123,17 @@ class CIDAAnalyser:
     log("File analysed %s, callgraph signature %s" % (msg, self.callgraph))
     log("Time to analyze %f" % (time.time() - t))
 
+    abspath = os.path.abspath(filename)
+    label = os.path.basename(os.path.dirname(abspath))
+
     callgraph = str(self.callgraph)
     primes = ",".join(map(str, self.primes))
     desc = None # We don't have pyclamd in IDA...
     self.db.insert("samples", filename=filename, callgraph=callgraph,  \
                    hash=sha1_hash, total_functions=total_functions,    \
                    format=None, primes=primes, description=desc,\
-                   analysis_date=time.asctime())
+                   analysis_date=time.asctime(),
+                   label = label)
     return ANALYSIS_SUCCESS
 
 #-----------------------------------------------------------------------

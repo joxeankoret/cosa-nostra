@@ -174,8 +174,11 @@ path.link {
   <input type="hidden" name="id" value="$row['id']"/>
   <input type="submit" value="Update"/>
 </form>
-<input type="image" id="generate" src="/static/svg.png" title="Save as SVG"/>
-<input type="image" id="generate_png" src="/static/png.png" title="Save view as PNG"/>
+<input type="image" id="generate" src="/static/img/svg.png" title="Save as SVG" width="24"/>
+<input type="image" id="generate_png" src="/static/img/png.png" title="Save view as PNG" width="24"/>
+<input type="image" id="generate_json" src="/static/img/json.png" title="Save as JSON" width="24"/>
+<input type="image" id="generate_dot" src="/static/img/dot.png" title="Save as GraphViz" width="24"/>
+<input type="image" id="generate_gml" src="/static/img/gml.png" title="Save as GML" width="24"/>
 <div id="body" class="help">
 <script type="text/javascript">
 var viewerWidth, viewerHeight;
@@ -720,6 +723,15 @@ function layout_draggable() {
   d3.select("#generate")
     .on("click", saveAsSVG);
 
+  d3.select("#generate_dot")
+    .on("click", saveAsDot);
+
+  d3.select("#generate_gml")
+    .on("click", saveAsGml);
+
+  d3.select("#generate_json")
+    .on("click", saveAsJson);
+
   function saveAsSVG() {
     svg = document.getElementsByTagName("svg")[0]
     saveSvg(svg, "graph.svg");
@@ -730,7 +742,17 @@ function layout_draggable() {
     saveSvgAsPng(svg, "graph.png");
   };
 
-
+  function saveAsDot() {
+    window.open("/view_cluster.json?id=$row['id']");
+  };
+  
+  function saveAsGml() {
+    window.open("/view_cluster.gml?id=$row['id']");
+  };
+  
+  function saveAsDot() {
+    window.open("/view_cluster.dot?id=$row['id']");
+  };
 }
 
 layout_draggable();

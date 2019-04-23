@@ -26,6 +26,8 @@ urls = (
   '/view_cluster', 'view_cluster',
   '/update_cluster', 'update_cluster',
   '/view_cluster.json', 'view_cluster_json',
+  '/view_cluster.gml', 'view_cluster_gml',
+  '/view_cluster.dot', 'view_cluster_dot',
 )
 
 app = web.application(urls, globals())
@@ -69,7 +71,8 @@ def create_schema(db):
            primes text,
            total_functions integer,
            clustered integer default '0',
-           analysis_date varchar(255));"""
+           analysis_date varchar(255),
+           label text);"""
   db.query(sql)
 
   sql = """create table if not exists clusters (
@@ -432,6 +435,54 @@ class view_cluster_json:
     g.fromDict(json.loads(g_text))
     json_graph = graph2json(g)
     return json_graph
+
+#-----------------------------------------------------------------------
+class view_cluster_dot:
+  def GET(self):
+    if not 'user' in session or session.user is None:
+      f = register_form()
+      return render.login(f)
+
+    i = web.input(id=None)
+    if i.id is None or not i.id.isdigit():
+      return render.error("No cluster id specified or invalid one.")
+
+    db = open_db()
+    where = "id = $id"
+    sql_vars = {"id":int(i.id)}
+    ret = db.select("clusters", what="graph", vars=sql_vars, where=where)
+    rows = list(ret)
+    if len(rows) == 0:
+      return render.error("Invalid cluster id.")
+
+    g_text = rows[0]["graph"]
+    g = CGraph()
+    dot = g.toDot()
+    return dot
+
+#-----------------------------------------------------------------------
+class view_cluster_gml:
+  def GET(self):
+    if not 'user' in session or session.user is None:
+      f = register_form()
+      return render.login(f)
+
+    i = web.input(id=None)
+    if i.id is None or not i.id.isdigit():
+      return render.error("No cluster id specified or invalid one.")
+
+    db = open_db()
+    where = "id = $id"
+    sql_vars = {"id":int(i.id)}
+    ret = db.select("clusters", what="graph", vars=sql_vars, where=where)
+    rows = list(ret)
+    if len(rows) == 0:
+      return render.error("Invalid cluster id.")
+
+    g_text = rows[0]["graph"]
+    g = CGraph()
+    dot = g.toGml()
+    return dot
 
 #-----------------------------------------------------------------------
 class clusters:
