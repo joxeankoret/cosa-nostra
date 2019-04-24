@@ -170,7 +170,7 @@ path.link {
  <div class="row">
 <h2>View cluster</h2>
 <form action="update_cluster" method="POST">
-  Description: <input type="text" name="description" value="$row['description']" size="100%"/>
+  Description: <input type="text" name="description" value="$row['description'].replace('\n', ' ')" size="100%"/>
   <input type="hidden" name="id" value="$row['id']"/>
   <input type="submit" value="Update"/>
 </form>

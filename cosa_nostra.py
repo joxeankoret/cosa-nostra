@@ -12,7 +12,7 @@ from urllib import quote_plus
 from graphs import CGraph
 from config import CN_USER, CN_PASS
 from cn_query import q2w, seems_query
-from cn_db import init_web_db, webpy_connect_db as connect_db
+from cn_db import init_web_db, get_dbn, webpy_connect_db as connect_db
 
 #-----------------------------------------------------------------------
 urls = (
@@ -50,9 +50,81 @@ register_form = form.Form(
 # FUNCTIONS
 
 #-----------------------------------------------------------------------
-def create_schema(db):
+def create_schema_mysql(db):
   printing = db.printing
   db.printing = False
+  db.dbn = get_dbn()
+
+  sql = """create table if not exists config (
+           id integer not null primary key auto_increment,
+           name varchar(50),
+           value varchar(255),
+           description varchar(255));"""
+  db.query(sql)
+
+  sql = """create table if not exists samples (
+           id integer not null primary key auto_increment,
+           filename varchar(255),
+           description varchar(255),
+           format varchar(30),
+           hash varchar(40),
+           callgraph text,
+           primes text,
+           total_functions integer,
+           clustered integer default '0',
+           analysis_date varchar(255),
+           label text);"""
+  db.query(sql)
+
+  sql = """create table if not exists clusters (
+           id integer not null primary key auto_increment,
+           description text,
+           generation_level integer,
+           last_update varchar(255),
+           graph text,
+           samples text,
+           min_funcs integer,
+           max_funcs integer,
+           dot text,
+           tags text
+           );"""
+  db.query(sql)
+
+  try:
+    sql = """create index idx_cluster_samples
+                                     on clusters(samples(255))"""
+    db.query(sql)
+
+    sql = """create index idx_cluster_desc
+                                     on clusters(description(255))"""
+    db.query(sql)
+
+    sql = """ create index idx_samples_description
+                                      on samples(description(255))"""
+    db.query(sql)
+
+    sql = """ create index idx_samples_filename
+                                      on samples(filename)"""
+    db.query(sql)
+
+    sql = """ create index idx_samples_hash
+                                      on samples(hash)"""
+    db.query(sql)
+
+    sql = """ create index idx_samples_composite1
+                                      on samples(hash, description,
+                                                  filename)"""
+    db.query(sql)
+  except:
+    pass
+
+  db.printing = printing
+
+#-----------------------------------------------------------------------
+def create_schema_sqlite(db):
+  printing = db.printing
+  db.printing = False
+  db.dbn = get_dbn()
 
   sql = """create table if not exists config (
            id integer not null primary key autoincrement,
@@ -113,15 +185,26 @@ def create_schema(db):
                                     on samples(hash, description,
                                                filename)"""
   db.query(sql)
-
   db.printing = printing
 
 #-----------------------------------------------------------------------
+g_db = None
 def open_db():
+  global g_db
+  
+  if g_db is not None:
+    return g_db
+
   db = init_web_db()
   if not 'schema' in session or session.schema is None:
-    create_schema(db)
+    dbn = get_dbn()
+    if dbn == "mysql":
+      create_schema_mysql(db)
+    else: # Assumed to be SQLite...
+      create_schema_sqlite(db)
     session.schema = True
+
+  g_db = db
   return db
 
 #-----------------------------------------------------------------------
@@ -345,6 +428,9 @@ class view_cluster:
     elif len(rows) > 2:
       return render.error("Duplicate cluster (%d) found!" % cluster_id)
 
+    if rows[0]["description"] is None:
+      rows[0]["description"] = ""
+
     return render.view_cluster(rows[0])
 
 #-----------------------------------------------------------------------
@@ -464,10 +550,11 @@ class view_cluster_dot:
         g.renameNode(node.name, node.name.replace("New node ", "Cluster "))
       else:
         data = get_sample_data(node.name)
+        tmp = "%s%s"
         if data["description"] is not None:
-          tmp = data["description"]
+          tmp %= (data["description"], " - " + data["hash"])
         else:
-          tmp = data["hash"]
+          tmp %= (data["hash"], "")
         g.renameNode(node.name, tmp)
 
     dot = g.toDot()
@@ -501,10 +588,11 @@ class view_cluster_gml:
         g.renameNode(node.name, node.name.replace("New node ", "Cluster "))
       else:
         data = get_sample_data(node.name)
+        tmp = "%s%s"
         if data["description"] is not None:
-          tmp = data["description"]
+          tmp %= (data["description"], " - " + data["hash"])
         else:
-          tmp = data["hash"]
+          tmp %= (data["hash"], "")
         g.renameNode(node.name, tmp)
 
     dot = g.toGml()

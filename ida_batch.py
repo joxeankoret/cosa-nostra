@@ -14,10 +14,20 @@ from cn_log import log
 from cn_db import init_web_db
 from cosa_nostra import open_db
 
+try:
+  import pyclamd
+except ImportError:
+  log("No pyclamd support, files will not have a description.")
+  pyclamd = None
+
 #-----------------------------------------------------------------------
 ANALYSIS_FAILED = 0
 ANALYSIS_SUCCESS = 1
 ANALYSIS_ALREADY = 2
+
+#-----------------------------------------------------------------------
+def ida_log(msg):
+  log("COSA-NOSTRA: %s" % msg)
 
 #-----------------------------------------------------------------------
 def primes(n):
@@ -49,6 +59,27 @@ class CIDAAnalyser:
     
     self.callgraph = None
     self.primes = None
+    
+    self.clamd = None
+
+  def get_description(self, buf):
+    try:
+      self.clamd = pyclamd.ClamdAgnostic()
+      self.clamd.ping()
+
+      ret = self.clamd.scan_stream(buf)
+      if ret is None:
+        return None
+
+      # Answer format is in the following form:
+      # >>> cd.scan_stream(buf)
+      # >>> {u'stream': ('FOUND', 'Win.Trojan.Miniduke-3')}
+      ret = ret["stream"][1]
+      ida_log("Found malware name %s" % repr(ret))
+      return ret
+    except:
+      ida_log("Clamd error: %s" % str(sys.exc_info()[1]))
+      return None
 
   def file_exists(self, sha1_hash):
     what = "1"
@@ -111,24 +142,24 @@ class CIDAAnalyser:
     buf = open(filename, "rb").read()
     sha1_hash = sha1(buf).hexdigest()
     if self.file_exists(sha1_hash):
-      log("Already existing file %s..." % sha1_hash)
+      ida_log("Already existing file %s..." % sha1_hash)
       return ANALYSIS_ALREADY
 
     data = self.read_functions()
-    if data is None:
+    if data is None or data == ANALYSIS_FAILED:
       return ANALYSIS_FAILED
 
     total_functions, avg_nodes, avg_edges, avg_ccs = data
     msg = "%d-%d-%d-%d" % (total_functions, avg_nodes, avg_edges, avg_ccs)
-    log("File analysed %s, callgraph signature %s" % (msg, self.callgraph))
-    log("Time to analyze %f" % (time.time() - t))
+    ida_log("File analysed %s, callgraph signature %s" % (msg, self.callgraph))
+    ida_log("Time to analyze %f" % (time.time() - t))
 
     abspath = os.path.abspath(filename)
     label = os.path.basename(os.path.dirname(abspath))
 
     callgraph = str(self.callgraph)
     primes = ",".join(map(str, self.primes))
-    desc = None # We don't have pyclamd in IDA...
+    desc = self.get_description(buf)
     self.db.insert("samples", filename=filename, callgraph=callgraph,  \
                    hash=sha1_hash, total_functions=total_functions,    \
                    format=None, primes=primes, description=desc,\
@@ -145,7 +176,10 @@ def main():
   anal = CIDAAnalyser()
   ret = anal.analyse(GetInputFilePath())
   if ret > ANALYSIS_FAILED:
+    ida_log("Analysis successful")
     qexit(0)
+
+  ida_log("Analysis failed")
   qexit(1)
 
 if __name__ == "__main__":

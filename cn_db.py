@@ -33,9 +33,14 @@ def get_dbn(cfg_file = "config.cfg"):
   parser.optionxform = str
   cn_db_file = os.getenv("CN_DB")
   if cn_db_file is not None:
-    print "*** USING DATABASE", cn_db_file
+    #print "*** USING DATABASE", cn_db_file
     cfg_file = cn_db_file
-  parser.read(cfg_file)
+  
+  if os.path.exists(cfg_file):
+    parser.read(cfg_file)
+  else:
+    tmp = os.path.dirname(os.path.realpath(__file__))
+    parser.read(os.path.join(tmp, cfg_file))
 
   section = 'database'
   if 'database' not in parser.sections():
@@ -49,10 +54,14 @@ def init_web_db(cfg_file = "config.cfg"):
   parser.optionxform = str
   cn_db_file = os.getenv("CN_DB")
   if cn_db_file is not None:
-    print "*** USING DATABASE", cn_db_file
+    #print "*** USING DATABASE", cn_db_file
     cfg_file = cn_db_file
 
-  parser.read(cfg_file)
+  if os.path.exists(cfg_file):
+    parser.read(cfg_file)
+  else:
+    tmp = os.path.dirname(os.path.realpath(__file__))
+    parser.read(os.path.join(tmp, cfg_file))
 
   section = 'database'
   if 'database' not in parser.sections():
