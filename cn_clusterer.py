@@ -110,12 +110,17 @@ class CSamplesClusterer:
       else:
         log("Creating unnamed cluster...")
 
+      if cluster_graph is None:
+        cluster_graph = ""
+      if cluster_tags is None:
+        cluster_tags = ""
+
       with self.db.transaction():
         self.db.insert("clusters", description=cluster_name,           \
-                graph=cluster_graph, generation_level=generation_level,\
+                graph=cluster_graph[:65535], generation_level=generation_level,\
                 samples=cluster_samples_j, last_update=time.asctime(), \
                 max_funcs=max_funcs, min_funcs=min_funcs, dot=dot,     \
-                tags=cluster_tags)
+                tags=cluster_tags[:65535])
 
         c_vars = {"samples":list(cluster_samples)}
         where = "id in $samples"

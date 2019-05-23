@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import sqlite3
+import idautils
 
 from hashlib import sha1
 
@@ -102,6 +103,15 @@ class CIDAAnalyser:
     cc = edges - nodes + 2
     return nodes, edges, cc
 
+  def try_search_functions(self):
+    for ea in idautils.Segments():
+      segend = idc.GetSegmentAttr(ea, SEGATTR_END)
+      start = ea
+      while start < segend:
+        MakeFunction(start)
+        MakeCode(start)
+        start = FindUnexplored(start+1, SEARCH_DOWN)
+
   def read_functions(self):
     autoWait()
 
@@ -109,7 +119,11 @@ class CIDAAnalyser:
     l = list(Functions())
     total_functions = len(l)
     if total_functions == 0:
-      return ANALYSIS_FAILED
+      self.try_search_functions()
+      l = list(Functions())
+      total_functions = len(l)
+      if total_functions == 0:
+        return ANALYSIS_FAILED
 
     nodes = []
     edges = []
