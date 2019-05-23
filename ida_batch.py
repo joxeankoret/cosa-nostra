@@ -104,6 +104,7 @@ class CIDAAnalyser:
     return nodes, edges, cc
 
   def try_search_functions(self):
+    MakeUnknown(MinEA(), MaxEA() - MinEA(), DOUNK_EXPAND)
     for ea in idautils.Segments():
       segend = idc.GetSegmentAttr(ea, SEGATTR_END)
       start = ea
