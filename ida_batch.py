@@ -109,6 +109,10 @@ class CIDAAnalyser:
       segend = idc.GetSegmentAttr(ea, SEGATTR_END)
       start = ea
       while start < segend:
+        if Byte(start) == 0xCC:
+          start += 1
+          continue
+
         MakeFunction(start)
         MakeCode(start)
         start = FindUnexplored(start+1, SEARCH_DOWN)
