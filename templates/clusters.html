@@ -129,7 +129,7 @@ $def with (clusters, total, json_loads)
               desc = desc.replace("\n", ", ")
             $:desc</a>
             &nbsp;
-            $if row["tags"] is not None:
+            $if row["tags"] is not None and row["tags"] != "":
               $for tag in json_loads(row["tags"]):
                 <span class="tag">$tag</span>
           </td>
