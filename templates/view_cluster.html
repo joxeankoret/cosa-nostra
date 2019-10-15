@@ -551,7 +551,7 @@ function layout_draggable() {
               // d.y = (d.depth * 500); //500px per level.
           });
 
-          // Update the nodes…
+          // Update the nodes
           node = svgGroup.selectAll("g.node")
               .data(nodes, function(d) {
                   return d.id || (d.id = ++i);
@@ -657,7 +657,7 @@ function layout_draggable() {
           nodeExit.select("text")
               .style("fill-opacity", 0);
 
-          // Update the links…
+          // Update the links
           var link = svgGroup.selectAll("path.link")
               .data(links, function(d) {
                   return d.target.id;
