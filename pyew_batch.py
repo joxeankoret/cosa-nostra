@@ -10,15 +10,15 @@ from hashlib import sha1
 sys.path.append("pyew")
 from pyew_core import CPyew
 
+from cn_log import log
+from cn_db import init_web_db
+from cosa_nostra import open_db
+
 try:
   import pyclamd
 except ImportError:
   log("No pyclamd support, files will not have a description.")
   pyclamd = None
-
-from cn_log import log
-from cn_db import init_web_db
-from cosa_nostra import open_db
 
 #-----------------------------------------------------------------------
 ANALYSIS_FAILED = 0
@@ -52,7 +52,7 @@ class CPyewAnalyser:
     self.primes_table = primes(16384*4)
     self.db = open_db()
     self.db.printing = False
-    
+
     self.clamd = None
     if pyclamd is not None:
       self.clamd = pyclamd.ClamdAgnostic()
@@ -127,7 +127,7 @@ class CPyewAnalyser:
         edges.append(pyew.function_stats[x][1])
         cc = pyew.function_stats[x][2]
         ccs.append(cc)
-        
+
         prime = self.primes_table[cc]
         callgraph *= prime
         primes.append(prime)
