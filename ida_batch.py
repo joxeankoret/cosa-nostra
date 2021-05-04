@@ -5,6 +5,8 @@ import sys
 import time
 import sqlite3
 import idautils
+import ida_nalt
+import ida_auto
 
 from hashlib import sha1
 
@@ -42,6 +44,7 @@ def primes(n):
   while m <= mroot:
     if s[i]:
       j=(m*m-3)/2
+      j = int(j)
       s[j]=0
       while j<half:
         s[j]=0
@@ -118,7 +121,7 @@ class CIDAAnalyser:
         start = FindUnexplored(start+1, SEARCH_DOWN)
 
   def read_functions(self):
-    autoWait()
+    ida_auto.auto_wait()
 
     primes = []
     l = list(Functions())
@@ -193,7 +196,7 @@ def usage():
 #-----------------------------------------------------------------------
 def main():
   anal = CIDAAnalyser()
-  ret = anal.analyse(GetInputFilePath())
+  ret = anal.analyse(ida_nalt.get_input_file_path())
   if ret > ANALYSIS_FAILED:
     ida_log("Analysis successful")
     qexit(0)
