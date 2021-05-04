@@ -2,6 +2,8 @@
 
 Cosa Nostra is an open source software clustering toolkit with a focus on malware analysis. It can create phylogenetic trees of binary malware samples that are structurally similar. It was initially released during SyScan360 Shanghai (2016).
 
+I basically maintain it since 2016 for my one and only user, who happens to be a friend... Well.
+
 # Getting started
 
 ## Required 3rd party tools
