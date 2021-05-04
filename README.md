@@ -19,7 +19,7 @@ Once you have installed any of the previously mentioned tools you will need to u
 
 ```
 $ cd $COSA_NOSTRA_DIR
-$ /path/to/ida64 -B -A -Sida_batch.py example.exe
+$ /path/to/ida64 -B -A -S/full/path/to/ida_batch.py example.exe
 ```
 
 Or
