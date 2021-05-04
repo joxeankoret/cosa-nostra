@@ -10,21 +10,17 @@ import threading
 import r2pipe
 
 from hashlib import sha1
+from io import StringIO
 
-try:
-  from io import StringIO
-except ImportError:
-  from io import StringIO
+from cn_log import log
+from cn_db import init_web_db
+from cosa_nostra import open_db
 
 try:
   import pyclamd
 except ImportError:
   log("No pyclamd support, files will not have a description.")
   pyclamd = None
-
-from cn_log import log
-from cn_db import init_web_db
-from cosa_nostra import open_db
 
 #-----------------------------------------------------------------------
 ANALYSIS_FAILED = 0
@@ -63,7 +59,7 @@ class CR2Analyser:
     self.primes_table = primes(16384*4)
     self.db = open_db()
     self.db.printing = False
-    
+
     self.r2 = None
     self.clamd = None
     if pyclamd is not None:
@@ -101,7 +97,7 @@ class CR2Analyser:
       if len(fields) > 1:
         f1, f2 = fields[0], fields[1]
         l.add((f1, f2))
-        
+
         if len(fields) > 4:
           print("fields", fields)
           is_jump = False
@@ -111,10 +107,6 @@ class CR2Analyser:
             elif is_jump:
               l.add((f1, field))
               is_jump = False
-    
-    print(l)
-    print(len(l))
-    input("?")
 
   def read_function(self, f):
     offset = f["offset"]
@@ -188,7 +180,7 @@ class CR2Analyser:
         nodes.append(f_nodes)
         edges.append(f_edges)
         ccs.append(f_cc)
-        
+
         prime = self.primes_table[f_cc]
         callgraph *= prime
         primes.append(prime)
