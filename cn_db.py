@@ -8,7 +8,7 @@ Cosa Nostra database connection
 import os
 import web
 import random
-import ConfigParser
+import configparser
 
 #-----------------------------------------------------------------------
 def sqlite_concat(arg1, arg2):
@@ -29,7 +29,7 @@ def sqlite_rand():
 
 #-----------------------------------------------------------------------
 def get_dbn(cfg_file = "config.cfg"):
-  parser = ConfigParser.SafeConfigParser()
+  parser = configparser.SafeConfigParser()
   parser.optionxform = str
   cn_db_file = os.getenv("CN_DB")
   if cn_db_file is not None:
@@ -50,7 +50,7 @@ def get_dbn(cfg_file = "config.cfg"):
 
 #-----------------------------------------------------------------------
 def init_web_db(cfg_file = "config.cfg"):
-  parser = ConfigParser.SafeConfigParser()
+  parser = configparser.SafeConfigParser()
   parser.optionxform = str
   cn_db_file = os.getenv("CN_DB")
   if cn_db_file is not None:

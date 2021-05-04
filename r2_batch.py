@@ -3,7 +3,7 @@
 import os
 import sys
 import time
-import thread
+import _thread
 import sqlite3
 import threading
 
@@ -12,9 +12,9 @@ import r2pipe
 from hashlib import sha1
 
 try:
-  from cStringIO import StringIO
+  from io import StringIO
 except ImportError:
-  from StringIO import StringIO
+  from io import StringIO
 
 try:
   import pyclamd
@@ -35,7 +35,7 @@ ANALYSIS_ALREADY = 2
 def primes(n):
   if n==2: return [2]
   elif n<2: return []
-  s=range(3,n+1,2)
+  s=list(range(3,n+1,2))
   mroot = n ** 0.5
   half=(n+1)/2-1
   i=0
@@ -54,7 +54,7 @@ def primes(n):
 #-----------------------------------------------------------------------
 def self_kill():
   log("*** TIMEOUT *** KILLING MY SELF!")
-  thread.interrupt_main()
+  _thread.interrupt_main()
 
 #-----------------------------------------------------------------------
 class CR2Analyser:
@@ -103,7 +103,7 @@ class CR2Analyser:
         l.add((f1, f2))
         
         if len(fields) > 4:
-          print "fields", fields
+          print("fields", fields)
           is_jump = False
           for field in fields[4:]:
             if not is_jump:
@@ -112,9 +112,9 @@ class CR2Analyser:
               l.add((f1, field))
               is_jump = False
     
-    print l
-    print len(l)
-    raw_input("?")
+    print(l)
+    print(len(l))
+    input("?")
 
   def read_function(self, f):
     offset = f["offset"]
@@ -215,7 +215,7 @@ class CR2Analyser:
 
 #-----------------------------------------------------------------------
 def usage():
-  print "Usage:", sys.argv[0], "<executable file>"
+  print("Usage:", sys.argv[0], "<executable file>")
 
 #-----------------------------------------------------------------------
 def main(path):

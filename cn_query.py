@@ -108,11 +108,11 @@ class CQuery2Where:
 
 #-----------------------------------------------------------------------
 def usage():
-  print "Usage:", sys.argv[0], "<query>"
+  print("Usage:", sys.argv[0], "<query>")
 
 #-----------------------------------------------------------------------
 def main(query):
-  print q2w(["clustered", "total_functions", "hash"], query)
+  print(q2w(["clustered", "total_functions", "hash"], query))
 
 if __name__ == "__main__":
   if len(sys.argv) == 1:

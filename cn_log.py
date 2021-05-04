@@ -8,13 +8,13 @@ Cosa Nostra logging utilities
 import os
 import sys
 import time
-import thread
+import _thread
 
 from config import DEBUG
 
 #-----------------------------------------------------------------------
 def log(msg):
-  print "[%s %d:%d] %s" % (time.asctime(), os.getpid(), thread.get_ident(), msg)
+  print("[%s %d:%d] %s" % (time.asctime(), os.getpid(), _thread.get_ident(), msg))
   sys.stdout.flush()
 
 #-----------------------------------------------------------------------

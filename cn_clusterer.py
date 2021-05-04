@@ -87,7 +87,7 @@ class CSamplesClusterer:
         else:
           generation_level += 1
 
-        new_d[str(key)] = map(str, d[key])
+        new_d[str(key)] = list(map(str, d[key]))
 
         for x in d[key]:
           if x.name.isdigit():
@@ -132,7 +132,7 @@ class CSamplesClusterer:
     d = {}
     for prime in primes:
       try:
-        prime = long(prime)
+        prime = int(prime)
         d[prime] += 1
       except:
         d[prime] = 1

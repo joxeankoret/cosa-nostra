@@ -29,7 +29,7 @@ ANALYSIS_ALREADY = 2
 def primes(n):
   if n==2: return [2]
   elif n<2: return []
-  s=range(3,n+1,2)
+  s=list(range(3,n+1,2))
   mroot = n ** 0.5
   half=(n+1)/2-1
   i=0
@@ -154,7 +154,7 @@ class CPyewAnalyser:
 
 #-----------------------------------------------------------------------
 def usage():
-  print "Usage:", sys.argv[0], "<executable file>"
+  print("Usage:", sys.argv[0], "<executable file>")
 
 #-----------------------------------------------------------------------
 def main(path):

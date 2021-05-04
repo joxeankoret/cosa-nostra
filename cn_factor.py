@@ -17,7 +17,7 @@ def primesbelow(N):
   N = {0:N, 1:N-1, 2:N+4, 3:N+3, 4:N+2, 5:N+1}[N%6]
   sieve = [True] * (N // 3)
   sieve[0] = False
-  for i in range(long(N ** .5) // 3 + 1):
+  for i in range(int(N ** .5) // 3 + 1):
     if sieve[i]:
       k = (3 * i + 1) | 1
       sieve[k*k // 3::2*k] = [False] * ((N//6 - (k*k)//6 - 1)//k + 1)
@@ -95,13 +95,13 @@ smallprimes = primesbelow(1000)
 def primefactors(n, sort=False):
   factors = []
 
-  limit = long(n ** decimal.Decimal(.5)) + 1
+  limit = int(n ** decimal.Decimal(.5)) + 1
   for checker in smallprimes:
     if checker > limit: break
     while n % checker == 0:
       factors.append(checker)
       n //= checker
-      limit = long(n ** decimal.Decimal(.5)) + 1
+      limit = int(n ** decimal.Decimal(.5)) + 1
       if checker > limit: break
 
   if n < 2: return factors
@@ -137,7 +137,7 @@ def totient(n):
   except KeyError: pass
 
   tot = 1
-  for p, exp in factorization(n).items():
+  for p, exp in list(factorization(n).items()):
     tot *= (p - 1)  *  p ** (exp - 1)
 
   totients[n] = tot
@@ -164,23 +164,23 @@ def difference(num1, num2):
           num2]
   s = []
   for num in nums:
-    if FACTORS_CACHE.has_key(num):
+    if num in FACTORS_CACHE:
       x = FACTORS_CACHE[num]
     else:
-      x = factorization(long(num))
+      x = factorization(int(num))
       FACTORS_CACHE[num] = x
     s.append(x)
 
   diffs = {}
-  for x in s[0].keys(): # XXX: FIXME: Do not calculate again and again!
-    if x in s[1].keys(): # XXX: FIXME: Do not calculate again and again!
+  for x in list(s[0].keys()): # XXX: FIXME: Do not calculate again and again!
+    if x in list(s[1].keys()): # XXX: FIXME: Do not calculate again and again!
       if s[0][x] != s[1][x]:
         diffs[x] = max(s[0][x], s[1][x]) - min(s[0][x], s[1][x])
     else:
       diffs[x] = s[0][x]
   
-  for x in s[1].keys(): # XXX: FIXME: Do not calculate again and again!
-    if x in s[0].keys(): # XXX: FIXME: Do not calculate again and again!
+  for x in list(s[1].keys()): # XXX: FIXME: Do not calculate again and again!
+    if x in list(s[0].keys()): # XXX: FIXME: Do not calculate again and again!
       if s[1][x] != s[0][x]:
         diffs[x] = max(s[0][x], s[1][x]) - min(s[0][x], s[1][x])
     else:
@@ -203,7 +203,7 @@ def difference_matrix(samples, debug=True):
   it2 = 0
   for x in samples:
     if debug:
-      print "Calculating difference matrix for %s, iteration %d out of %d (%d matches, %d cache misses)" % (x, iteration, total_iterations, matches, no_matches)
+      print("Calculating difference matrix for %s, iteration %d out of %d (%d matches, %d cache misses)" % (x, iteration, total_iterations, matches, no_matches))
 
     if it2 % 1000 == 0:
       # Horrible. For one of the "optimizations" for this algorithm it 
@@ -217,7 +217,7 @@ def difference_matrix(samples, debug=True):
       # are welcome...
       if len(DIFF_CACHE) > 1000000:
         if debug:
-          print "Too much memory being used, freeing up..."
+          print("Too much memory being used, freeing up...")
 
         DIFF_CACHE = {}
         gc.collect()
@@ -231,7 +231,7 @@ def difference_matrix(samples, debug=True):
         # If we already clustered 2 malware samples for which the whole
         # list of primes is already clustered, do not try to cluster
         # them again, just use the previously calculated diff matrix.
-        key = str(long(samples[x]) * long(samples[y]))
+        key = str(int(samples[x]) * int(samples[y]))
         if key in DIFF_CACHE:
           d = DIFF_CACHE[key]
           matches += 1
@@ -263,7 +263,7 @@ class CFuzzyGraphMatcher(object):
     self.ascii_letters = self.generate_ascii_letters()
 
     if self.debug:
-      print "Total of %d sample(s) in set" % len(samples)
+      print("Total of %d sample(s) in set" % len(samples))
 
     self.groups_done = set()
 
@@ -310,12 +310,12 @@ class CFuzzyGraphMatcher(object):
       if self.diff_relative: # when relative, we consider max_diff a percent
         if value*100/total_functions <= self.max_diff:
           if self.debug and False:
-            print "\t %s - %d (%s%f percent)" % (sample2, value, "%", value*100./total_functions)
+            print("\t %s - %d (%s%f percent)" % (sample2, value, "%", value*100./total_functions))
           match = True
       else: # otherwise, it's a fixed value
         if value <= self.max_diff:
           if self.debug and False:
-            print "\t %s - %d" % (sample2, value)
+            print("\t %s - %d" % (sample2, value))
           match = True
       
       # We have a match, add the samples to 1 group, finding first if any of
@@ -366,7 +366,7 @@ class CFuzzyGraphMatcher(object):
 
     dm = {}
     for s1 in group:
-      if not dm.has_key(s1):
+      if s1 not in dm:
         dm[s1] = {}
       for s2 in group:
         if s1 == s2:
@@ -383,13 +383,13 @@ class CFuzzyGraphMatcher(object):
     """
     lowest = None
     n = len(D)
-    D_star = [sum(D[i].values()) for i in D.keys()]
+    D_star = [sum(D[i].values()) for i in list(D.keys())]
     Q = []
     i = 0
-    for s1 in D.keys():
+    for s1 in list(D.keys()):
       row = []
       j = 0
-      for s2 in D.keys():
+      for s2 in list(D.keys()):
         if s1 == s2:
           element = 0
         else:
@@ -406,11 +406,11 @@ class CFuzzyGraphMatcher(object):
   def get_dfg_distances(self, n1, n2, dm):
     # Calculate the start and the total number of elements
     n = len(dm)
-    D_star = [sum(dm[i].values()) for i in dm.keys()]
+    D_star = [sum(dm[i].values()) for i in list(dm.keys())]
     
     f = g = -1
     i = 0
-    for x in dm.keys():
+    for x in list(dm.keys()):
       if x == n1 and f == -1:
         f = i
       elif x == n2 and g == -1:
@@ -442,7 +442,7 @@ class CFuzzyGraphMatcher(object):
     s = str(l)
     if s in self.groups_done:
       if self.debug:
-        print "Already clustered group found, skipping..."
+        print("Already clustered group found, skipping...")
       return None
 
     g = CGraph()
@@ -459,14 +459,14 @@ class CFuzzyGraphMatcher(object):
 
     total_groups = len(group)-1
     groups = 0
-    for it in xrange(len(group)-1):
+    for it in range(len(group)-1):
       groups += 1
       node_num += 1
       # start by building a smaller difference matrix only for the samples
       # in this specific group
       dm = self.get_diff_matrix_for(group, dm)
       qm, lowest = self.get_q_matrix(dm)
-      group = dm.keys()
+      group = list(dm.keys())
 
       new_group = list(group)
       # Build a new node with the highest value found so far
@@ -486,9 +486,9 @@ class CFuzzyGraphMatcher(object):
         lowest = None
 
       n1, n2 = self.get_neighbors(qm, group, lowest, previous_node_name)
-      if not nodes.has_key(n1):
+      if n1 not in nodes:
         nodes[n1] = CNode(n1)
-      if not nodes.has_key(n2):
+      if n2 not in nodes:
         nodes[n2] = CNode(n2)
 
       dfu = dgu = 0 #self.get_dfg_distances(n1, n2, dm)
@@ -571,7 +571,7 @@ class CFuzzyGraphMatcher(object):
 
       if self.debug:
         line = "Making tree for group with %d sample(s), iteration %d out of %d"
-        print line % (len(group), i, total_groups)
+        print(line % (len(group), i, total_groups))
       
       i += 1
 
@@ -591,17 +591,17 @@ class CFuzzyGraphMatcher(object):
     self.cluster()
     for group in self.groups:
       for sample in group:
-        print "%s;;;;;%s" % (sample, self.samples[sample])
-      print
+        print("%s;;;;;%s" % (sample, self.samples[sample]))
+      print()
 
 #-----------------------------------------------------------------------
 def main(path):
   fgm = CFuzzyGraphMatcher.load_from_file(path, 50, True, debug=False)
-  print fgm.make_tree(to_dot=True)
+  print(fgm.make_tree(to_dot=True))
 
 #-----------------------------------------------------------------------
 def usage():
-  print "Usage:", sys.argv[0], "<CSV file>"
+  print("Usage:", sys.argv[0], "<CSV file>")
 
 if __name__ == "__main__":
   if len(sys.argv) == 1:

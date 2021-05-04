@@ -7,7 +7,7 @@ import json
 
 from web import form
 from hashlib import sha1
-from urllib import quote_plus
+from urllib.parse import quote_plus
 
 from graphs import CGraph
 from config import CN_USER, CN_PASS
@@ -30,13 +30,13 @@ urls = (
   '/view_cluster.dot', 'view_cluster_dot',
 )
 
+web.config.debug = False
 app = web.application(urls, globals())
 render = web.template.render('templates/')
-if web.config.get('_cn_session') is None:
-  session = web.session.Session(app, web.session.DiskStore('cn-sessions'), {'user':None})
-  web.config._cn_session = session
-else:
-  session = web.config._cn_session
+
+db = web.database(dbn='sqlite', db='sessions.db')
+store = web.session.DBStore(db, 'sessions')
+session = web.session.Session(app, store)
 
 register_form = form.Form(
   form.Textbox("username", description="Username"),
@@ -208,6 +208,10 @@ def open_db():
   return db
 
 #-----------------------------------------------------------------------
+def is_logged_on():
+  return session.get("user") is None
+
+#-----------------------------------------------------------------------
 # CLASSES
 
 #-----------------------------------------------------------------------
@@ -222,14 +226,16 @@ class login:
     i = web.input(username="", password="")
     if i.username == "" or i.password == "":
       return render.error("Invalid username or password")
-    elif i.username != CN_USER or sha1(i.password).hexdigest() != CN_PASS:
+    elif i.username != CN_USER or sha1(i.password.encode()).hexdigest() != CN_PASS:
       return render.error("Invalid username or password")
     session.user = i.username
+    print(">session.user = %s" % repr(session.user))
     return web.seeother("/")
 
 #-----------------------------------------------------------------------
 class index:
   def GET(self):
+    print("Session.get('user'):", session.get('user'))
     if not 'user' in session or session.user is None:
       f = register_form()
       return render.login(f)

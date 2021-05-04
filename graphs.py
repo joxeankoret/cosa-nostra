@@ -107,14 +107,14 @@ class CGraph(object):
     self.d = d
 
   def has_key(self, x):
-    return self.d.has_key(x)
+    return x in self.d
 
   def hash(self):
     ret = []
-    keys = self.d.keys()
+    keys = list(self.d.keys())
     keys.sort()
     for key in keys:
-      values = map(str, self.d[key])
+      values = list(map(str, self.d[key]))
       values.sort()
       copy_values = []
       for value in values:
@@ -144,7 +144,7 @@ class CGraph(object):
     self.d[node] = []
   
   def delNode(self, n):
-    if self.d.has_key(n):
+    if n in self.d:
       del self.d[n]
     
     for n2 in list(self.d):
@@ -155,7 +155,7 @@ class CGraph(object):
     self.addNode(edge)
 
   def addEdge(self, n1, n2, check_dups=False, value=None, label=None):
-    if not self.d.has_key(n1):
+    if n1 not in self.d:
       self.d[n1] = []
     
     if check_dups:
@@ -167,12 +167,12 @@ class CGraph(object):
     self.labels[(n1,n2)] = label
   
   def edgeExists(self, n1, n2):
-    if not self.d.has_key(n1):
+    if n1 not in self.d:
       return False
     return n2 in self.d[n1]
 
   def getWeight(self, n1, n2):
-    if self.weights.has_key((n1, n2)):
+    if (n1, n2) in self.weights:
       return self.weights[(n1, n2)]
     else:
       return None
@@ -198,7 +198,7 @@ class CGraph(object):
     if start == end:
       return path
     
-    if not self.d.has_key(start):
+    if start not in self.d:
       return None
     
     for node in self.d[start]:
@@ -214,7 +214,7 @@ class CGraph(object):
     
     if start == end:
       yield path
-    elif not self.d.has_key(start):
+    elif start not in self.d:
       yield None
     else:
       for node in self.d[start]:
@@ -240,7 +240,7 @@ class CGraph(object):
     path = path + [start]
     if start == end:
       return path
-    if not self.d.has_key(start):
+    if start not in self.d:
       return None
     
     shortest = None
@@ -255,7 +255,7 @@ class CGraph(object):
 
   def addGraph(self, g2):
     for key in list(g2.d):
-      if not self.d.has_key(key):
+      if key not in self.d:
         self.d[key] = []
       
       for value in list(g2.d[key]):
@@ -283,7 +283,7 @@ class CGraph(object):
   def fromAdjacencyList(self, l):
     for element in l:
       k, v = element
-      if not self.d.has_key(k):
+      if k not in self.d:
         self.d[k] = []
       
       if v not in self.d[k]:
@@ -291,8 +291,8 @@ class CGraph(object):
 
   def fromDict(self, d):
     l = set()
-    l.update(d.keys())
-    for x in d.values():
+    l.update(list(d.keys()))
+    for x in list(d.values()):
       l.update(x)
 
     nodes = {}
@@ -312,7 +312,7 @@ class CGraph(object):
     for n1 in nodes:
       y = []
       for n2 in nodes:
-        if not self.d.has_key(n2) or n1 not in self.d[n2]:
+        if n2 not in self.d or n1 not in self.d[n2]:
           v = 0
         else:
           v = 1
@@ -385,17 +385,17 @@ def test1():
   g.addEdge(n2, n4)
   g.addEdge(n3, n4)
   
-  print "Printing a graph with 4 nodes"
-  print g
+  print("Printing a graph with 4 nodes")
+  print(g)
   
-  print "Searching path between n1 and n1"
-  print g.searchPath(n1, n1)
-  print "Searching path between n1 and n2"
-  print g.searchPath(n1, n2)
-  print "Searching path between n1 and n4"
-  print g.searchPath(n1, n4)
+  print("Searching path between n1 and n1")
+  print(g.searchPath(n1, n1))
+  print("Searching path between n1 and n2")
+  print(g.searchPath(n1, n2))
+  print("Searching path between n1 and n4")
+  print(g.searchPath(n1, n4))
 
-  print "Creating a graph with 6 nodes"
+  print("Creating a graph with 6 nodes")
   g = CGraph()
   a = CNode("a")
   b = CNode("b")
@@ -409,25 +409,25 @@ def test1():
   g.addEdge(c, a)
   g.addEdge(d, e)
   g.addEdge(e, f)
-  print "1# Searching a path between a and f"
-  print g.searchPath(a, f)
+  print("1# Searching a path between a and f")
+  print(g.searchPath(a, f))
 
   g.addEdge(c, d)
-  print "2# Searching a path between a and f"
-  print g.searchPath(a, f)
+  print("2# Searching a path between a and f")
+  print(g.searchPath(a, f))
   
   g.addEdge(b, f)
   g.addEdge(c, f)
   g.addEdge(a, e)
-  print "Searching all paths between a and f"
-  print list(g.searchAllPaths(a, f))
+  print("Searching all paths between a and f")
+  print(list(g.searchAllPaths(a, f)))
   
-  print "Searching the shortest path between a and f"
-  print g.searchShortestPath(a, f)
+  print("Searching the shortest path between a and f")
+  print(g.searchShortestPath(a, f))
   
-  print "Clearing the graph"
+  print("Clearing the graph")
   g.clear()
-  print g
+  print(g)
 
 #-----------------------------------------------------------------------
 def test2():
@@ -461,11 +461,11 @@ def test2():
   #print g1
   
   #print "Adjacency list"
-  print g1.toAdjacencyList()
+  print(g1.toAdjacencyList())
   
   #print "Adjacency matrix"
   #print g1.nodes()
-  print g1.toAdjacencyMatrix()
+  print(g1.toAdjacencyMatrix())
 
 #-----------------------------------------------------------------------
 def test3():
@@ -510,7 +510,7 @@ def randomGraph(totally=False):
       if random.randint(0, 10) == 0:
         g.addEdge(nodes[x], nodes[y])
 
-  print g.toDot()
+  print(g.toDot())
 
 #-----------------------------------------------------------------------
 def randomGraph2():
@@ -529,14 +529,14 @@ def randomGraph2():
         g.addEdge(nodes[x], nodes[y])
 
   for i in range(100):
-    n1 = random.choice(nodes.keys())
-    n2 = random.choice(nodes.keys())
+    n1 = random.choice(list(nodes.keys()))
+    n2 = random.choice(list(nodes.keys()))
     
     #print "Searching a path between %s and %s in a %d nodes graph" % (n1, n2, node_count)
     path = g.searchPath(n1, n2)
     if path:
-      print "Path found between %s and %s in a %d nodes graph" % (n1, n2, node_count)
-      print path
+      print("Path found between %s and %s in a %d nodes graph" % (n1, n2, node_count))
+      print(path)
 
 #-----------------------------------------------------------------------
 def testRandomGraph():
@@ -554,17 +554,17 @@ def testRandomGraph():
       if random.randint(0, 4) == 1:
         g.addEdge(nodes[x], nodes[y])
 
-  print "Graph"
-  print g
-  print
-  print "Searching paths"
+  print("Graph")
+  print(g)
+  print()
+  print("Searching paths")
   for n1 in g.nodes():
-    if g.has_key(n1):
+    if n1 in g:
       for n2 in g.d[n1]:
-        print n1, n2
-        print "Shortest", g.searchShortestPath(n1, n2)
-        print "Longest", g.searchLongestPath(n1, n2)
-        print "All paths: Total %d" % len(list(g.searchAllPaths(n1, n2)))
+        print(n1, n2)
+        print("Shortest", g.searchShortestPath(n1, n2))
+        print("Longest", g.searchLongestPath(n1, n2))
+        print("All paths: Total %d" % len(list(g.searchAllPaths(n1, n2))))
 
 #-----------------------------------------------------------------------
 def testIsSubgraph():
@@ -601,13 +601,13 @@ def testIsSubgraph():
   g1.addEdge(c, g)
 
   g2 = CGraph()
-  print g2
+  print(g2)
   g2.addEdge(a, b)
   g2.addEdge(b, d)
   g2.addEdge(b, e)
 
-  print g1
-  print "g", g2
+  print(g1)
+  print("g", g2)
   # Check if it's a subgraph
   assert g1.isSubgraph(g2) 
   
@@ -665,20 +665,20 @@ def testOperations():
   al = g1.intersect(g2)
 
   g3.fromAdjacencyList(al)
-  print g3
+  print(g3)
   
   al = g1.union(g2)
   g3.clear()
   g3.addEdge(f, a)
   
   g3.fromAdjacencyList(al)
-  print g3
+  print(g3)
   
-  print g3.toAdjacencyMatrix()
+  print(g3.toAdjacencyMatrix())
   
-  print g3.difference(g1)
-  print g2.difference(g1)
-  print g3.difference(g2)
+  print(g3.difference(g1))
+  print(g2.difference(g1))
+  print(g3.difference(g2))
   
   al1 = g1.union(g2)
   al2 = g2.union(g3)
@@ -686,7 +686,7 @@ def testOperations():
   new_graph.fromAdjacencyList(al1)
   new_graph.fromAdjacencyList(al2)
   
-  print new_graph
+  print(new_graph)
 
 #-----------------------------------------------------------------------
 def testNode():
@@ -703,7 +703,7 @@ def testDict():
 
   g = CGraph()
   g.fromDict(d)
-  print g.toDot()
+  print(g.toDot())
 
 #-----------------------------------------------------------------------
 def testJson():
@@ -711,7 +711,7 @@ def testJson():
 
   g = CGraph()
   g.fromDict(d)
-  print g.toJson()
+  print(g.toJson())
 
 #-----------------------------------------------------------------------
 def testRename():
@@ -730,9 +730,9 @@ def testRename():
   g1.addEdge(b, e)
   g1.addEdge(c, f)
   g1.addEdge(c, g)
-  print("G?", g1)
+  print(("G?", g1))
   g1.renameNode("c", "new_c")
-  print("New G?", g1)
+  print(("New G?", g1))
 
 #-----------------------------------------------------------------------
 def testAll():
@@ -746,7 +746,7 @@ def testAll():
   #testNode()
   testRandomSubgraph()
   testOperations()
-  print "Done!"
+  print("Done!")
 
 if __name__ == "__main__":
   #testAll()
