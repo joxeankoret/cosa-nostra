@@ -38,7 +38,7 @@ def primes(n):
   m=3
   while m <= mroot:
     if s[i]:
-      j=(m*m-3)/2
+      j=int((m*m-3)/2)
       s[j]=0
       while j<half:
         s[j]=0

@@ -35,8 +35,11 @@ app = web.application(urls, globals())
 render = web.template.render('templates/')
 
 db = web.database(dbn='sqlite', db='sessions.db')
+"""
 store = web.session.DBStore(db, 'sessions')
 session = web.session.Session(app, store)
+"""
+session = web.session.Session(app, web.session.DiskStore("sessions"), initializer={"count": 0})
 
 register_form = form.Form(
   form.Textbox("username", description="Username"),

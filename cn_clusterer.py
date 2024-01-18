@@ -11,6 +11,10 @@ from cosa_nostra import open_db
 from cn_factor import CFuzzyGraphMatcher, FACTORS_CACHE
 
 #-----------------------------------------------------------------------
+if hasattr(sys, "set_int_max_str_digits"):
+  sys.set_int_max_str_digits(0)
+
+#-----------------------------------------------------------------------
 class CSamplesClusterer:
   def __init__(self):
     self.wait_time = 60
