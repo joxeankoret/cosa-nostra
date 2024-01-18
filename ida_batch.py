@@ -24,6 +24,10 @@ except ImportError:
   pyclamd = None
 
 #-----------------------------------------------------------------------
+if hasattr(sys, "set_int_max_str_digits"):
+  sys.set_int_max_str_digits(0)
+
+#-----------------------------------------------------------------------
 ANALYSIS_FAILED = 0
 ANALYSIS_SUCCESS = 1
 ANALYSIS_ALREADY = 2
