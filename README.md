@@ -2,14 +2,15 @@
 
 Cosa Nostra is an open source software clustering toolkit with a focus on malware analysis. It can create phylogenetic trees of binary malware samples that are structurally similar. It was initially released during SyScan360 Shanghai (2016).
 
+I basically maintain it since 2016 for my one and only user, who happens to be a friend... Well.
+
 # Getting started
 
 ## Required 3rd party tools
 
-In order to use Cosa Nostra you will need the source code, of course, a 2.7 version of Python, as well as one of the following tools in order to perform code analysis:
+In order to use Cosa Nostra you will need a version of Python 3.X as well as one of the following tools in order to perform code analysis:
 
- * [Pyew](http://github.com/joxeankoret/pyew) Written in Python, it supports analysis of PE, ELF, Bios and Boot files for x86 or x86_64.
- * [IDA](http://www.hex-rays.com) Written in C++. It supports analysing a plethora of executable types that you probably never even heard about. Commercial product.
+ * [IDA](http://www.hex-rays.com) Written in C++. It supports analysing a plethora of executable types that you probably never even heard about. Commercial product. Only the 7.X versions are now supported.
  * [Radare2](http://rada.re) Written in pure C. Same as with IDA, with support for extremely rare CPUs and binary formats. Also, it's open source!
 
 ## Analysing binaries
@@ -18,21 +19,14 @@ Once you have installed any of the previously mentioned tools you will need to u
 
 ```
 $ cd $COSA_NOSTRA_DIR
+$ /path/to/ida64 -B -A -S/full/path/to/ida_batch.py example.exe
+```
+
+Or
+
+```
+$ cd $COSA_NOSTRA_DIR
 $ python r2_batch.py example.exe
-```
-
-Or
-
-```
-$ cd $COSA_NOSTRA_DIR
-$ python pyew_batch.py example.exe
-```
-
-Or
-
-```
-$ cd $COSA_NOSTRA_DIR
-$ /path/to/idaq -B -A -Sida_batch.py example.exe
 ```
 
 ### Automating the Analysis of a Malware Dataset
@@ -46,7 +40,7 @@ $ find /your/malware/dataset/path -type f -exec python r2_batch.py {} ';'
 It can be done in parallel by using the "GNU Parallel" tool, as in the following example:
 
 ```
-$ find /your/malware/dataset/path -type f | parallel -j 8 python pyew_batch.py {}
+$ find /your/malware/dataset/path -type f | parallel -j 8 ida64 -B -A -S/path/to/ida_batch.py {}
 ```
 
 In the example above, it will launch a total of 8 pyew_batch processes in parallel.
